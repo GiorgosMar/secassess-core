@@ -1,5 +1,6 @@
 package org.secassess.core.service;
 
+import org.springframework.cache.annotation.Cacheable;
 import lombok.RequiredArgsConstructor;
 import org.secassess.core.dto.*;
 import org.secassess.core.enums.AssessmentStatus;
@@ -125,6 +126,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "assessments", key = "#pageable.pageNumber")
     public Page<AssessmentDto> findAll(Pageable pageable) {
         Page<Assessment> assessments = assessmentRepository.findAll(pageable);
         return assessmentMapper.toDtoPage(assessments);
