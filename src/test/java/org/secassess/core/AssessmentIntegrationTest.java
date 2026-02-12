@@ -46,7 +46,6 @@ class AssessmentIntegrationTest {
         projectRepository.deleteAll();
         organizationRepository.deleteAll();
 
-        // Προετοιμασία βασικών δεδομένων για όλα τα tests
         Organization org = organizationRepository.saveAndFlush(Organization.builder()
                 .name("Test Org").slug("test-org").build());
         orgSlug = org.getSlug();
@@ -74,7 +73,7 @@ class AssessmentIntegrationTest {
         CopyCriteriaRequestDto request = CopyCriteriaRequestDto.builder()
                 .templateId(templateId)
                 .sourceOrganizationSlug(orgSlug)
-                .targetVersion("1.0.0") // Valid SemVer
+                .targetVersion("1.0.0")
                 .build();
 
         ResponseEntity<CopyStatsResponseDto> response = callApi(token, request);
@@ -91,7 +90,7 @@ class AssessmentIntegrationTest {
         CopyCriteriaRequestDto request = CopyCriteriaRequestDto.builder()
                 .templateId(templateId)
                 .sourceOrganizationSlug(orgSlug)
-                .targetVersion("invalid-version-text") // Θα χτυπήσει ο SemVerValidator
+                .targetVersion("invalid-version-text")
                 .build();
 
         ResponseEntity<String> response = restTemplate.exchange(
@@ -102,13 +101,13 @@ class AssessmentIntegrationTest {
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody()).contains("Semantic Versioning"); // Το μήνυμα από τον Validator
+        assertThat(response.getBody()).contains("Semantic Versioning");
     }
 
     @Test
     @DisplayName("3. Security Error: ROLE_VIEWER should be forbidden from copying")
     void shouldReturn403ForUnauthorizedRole() {
-        // Ο Viewer δεν έχει δικαίωμα για POST /copy-from-template
+
         String token = jwtService.generateToken("viewer@test.com", "ROLE_VIEWER");
 
         CopyCriteriaRequestDto request = CopyCriteriaRequestDto.builder()
