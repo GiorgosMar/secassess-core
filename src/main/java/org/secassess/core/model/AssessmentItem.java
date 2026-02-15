@@ -11,7 +11,8 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "assessment_item")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -27,15 +28,22 @@ public class AssessmentItem {
     @Column(name = "criterion_ref")
     private UUID criterionRef;
 
+    @Column(name = "section")
     private String section;
 
     @Column(columnDefinition = "TEXT")
     private String text;
 
+    @Column(name = "severity")
     @Enumerated(EnumType.STRING)
     private Severity severity;
 
+    @Column(name = "weight")
     private BigDecimal weight;
+
+    @Column(name = "score")
     private Integer score;
+
+    @Column(name = "notes")
     private String notes;
 }

@@ -2,9 +2,6 @@ package org.secassess.core.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import java.time.Instant;
 import java.util.UUID;
 
 /**
@@ -12,11 +9,12 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "organization")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Organization {
+public class Organization extends BaseAuditableEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -26,12 +24,4 @@ public class Organization {
 
     @Column(nullable = false, length = 64, unique = true)
     private String slug;
-
-    @CreationTimestamp
-    @Column(name = "created_at")
-    private Instant createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private Instant updatedAt;
 }

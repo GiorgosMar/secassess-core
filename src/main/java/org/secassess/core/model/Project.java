@@ -9,11 +9,12 @@ import java.time.OffsetDateTime;
  */
 @Entity
 @Table(name = "project")
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Project {
+public class Project extends BaseAuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,10 +28,4 @@ public class Project {
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
-
-    @Builder.Default
-    private OffsetDateTime createdAt = OffsetDateTime.now();
-
-    @Builder.Default
-    private OffsetDateTime updatedAt = OffsetDateTime.now();
 }

@@ -34,8 +34,14 @@ public class AssessmentController {
             @PathVariable("id") UUID id,
             @Valid @RequestBody CopyCriteriaRequestDto request) {
 
+        log.info("REST request to copy criteria from Template: {} to Assessment: {}",
+                request.getTemplateId(), id);
 
         CopyStatsResponseDto response = assessmentService.copyCriteriaFromTemplate(id, request);
+
+        log.info("Successfully copied criteria. Stats: Copied={}, Total={}",
+                response.getCopied(), response.getTotalSource());
+
         return ResponseEntity.ok(response);
     }
 
@@ -44,14 +50,26 @@ public class AssessmentController {
             @PathVariable("id") UUID id,
             @Valid @RequestBody UpdateStatusRequestDto request) {
 
-        return ResponseEntity.ok(assessmentService.updateStatus(id, request));
+        log.info("REST request to update status for Assessment: {} to {}", id, request.getStatus());
+
+        AssessmentDto updated = assessmentService.updateStatus(id, request);
+
+        log.info("Assessment {} status updated successfully", id);
+
+        return ResponseEntity.ok(updated);
     }
 
     @GetMapping
     public ResponseEntity<Page<AssessmentDto>> getAllAssessments(
             @PageableDefault(size = 20, sort = "createdAt") Pageable pageable) {
 
+        log.info("REST request to fetch all assessments [Page: {}, Size: {}]",
+                pageable.getPageNumber(), pageable.getPageSize());
+
         Page<AssessmentDto> response = assessmentService.findAll(pageable);
+
+        log.info("Found {} assessments for the requested page", response.getNumberOfElements());
+
         return ResponseEntity.ok(response);
     }
 }

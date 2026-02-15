@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.springframework.data.domain.Pageable;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.data.domain.Pageable; // <--- ΑΥΤΟ ΕΛΕΙΠΕ
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,27 +28,29 @@ public class AssessmentCacheTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockitoSpyBean
+    @SpyBean
     private AssessmentService assessmentService;
 
     @Test
     @DisplayName("Verify that second call to findAll is served from Cache")
-    @WithMockUser(roles = "VIEWER")
+    @WithMockUser(roles = "VIEWER") // Βεβαιώσου ότι ο ρόλος VIEWER υπάρχει στο σύστημά σου
     public void testFindAllIsCached() throws Exception {
 
         log.info("==========================================================");
         log.info("STEP 1: Executing first call (Expected: CACHE MISS)");
         log.info("==========================================================");
 
+        // Πρώτη κλήση - Θα πρέπει να εκτελεστεί κανονικά
         mockMvc.perform(get("/api/v1/assessments")
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk());
 
         log.info("==========================================================");
-        log.info("STEP 2: Executing second call (Expected: CACHE HIT - Service should NOT be called)");
+        log.info("STEP 2: Executing second call (Expected: CACHE HIT)");
         log.info("==========================================================");
 
+        // Δεύτερη κλήση - Θα πρέπει να έρθει από την Cache
         mockMvc.perform(get("/api/v1/assessments")
                         .param("page", "0")
                         .param("size", "10"))
@@ -58,6 +60,7 @@ public class AssessmentCacheTest {
         log.info("STEP 3: Verifying that Service was invoked only ONCE");
         log.info("==========================================================");
 
+        // Επαλήθευση ότι η μέθοδος του service κλήθηκε ΜΟΝΟ 1 φορά
         verify(assessmentService, times(1)).findAll(any(Pageable.class));
 
         log.info("SUCCESS: Cache logic is working perfectly!");

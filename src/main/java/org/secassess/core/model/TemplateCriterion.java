@@ -11,7 +11,8 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "template_criterion")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -24,13 +25,16 @@ public class TemplateCriterion {
     @JoinColumn(name = "template_id")
     private AssessmentTemplate template;
 
+    @Column(columnDefinition = "section")
     private String section;
 
     @Column(columnDefinition = "TEXT")
     private String text;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "severity")
     private Severity severity;
 
+    @Column(columnDefinition = "weight")
     private BigDecimal weight;
 }

@@ -2,10 +2,7 @@ package org.secassess.core.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.secassess.core.enums.TemplateStatus;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,11 +11,12 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "assessment_template")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AssessmentTemplate {
+public class AssessmentTemplate extends BaseAuditableEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -26,19 +24,15 @@ public class AssessmentTemplate {
     @Column(name = "organization_id", nullable = false)
     private UUID organizationId;
 
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "version")
     private String version;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private TemplateStatus status;
-
-    @CreationTimestamp
-    @Column(name = "created_at")
-    private Instant createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private Instant updatedAt;
 
     @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TemplateCriterion> criteria;

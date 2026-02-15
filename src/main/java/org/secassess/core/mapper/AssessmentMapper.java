@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * A dedicated component for clean mapping between database entities and DTOs
+ * A dedicated component for clean mapping between database entities and DTOs.
+ * Note: createdAt and updatedAt are inherited from BaseAuditableEntity.
  */
 @Component
 public class AssessmentMapper {
@@ -37,6 +38,8 @@ public class AssessmentMapper {
     }
 
     private AssessmentItemDto toItemDto(AssessmentItem item) {
+        if (item == null) return null;
+
         return AssessmentItemDto.builder()
                 .id(item.getId())
                 .criterionRef(item.getCriterionRef())
@@ -53,7 +56,13 @@ public class AssessmentMapper {
         return page.map(this::toDto);
     }
 
+    /**
+     * Updates an existing AssessmentItem with data from a TemplateCriterion.
+     * Useful for synchronization or copying logic.
+     */
     public AssessmentItem updateItemFromCriterion(AssessmentItem target, TemplateCriterion source) {
+        if (target == null || source == null) return target;
+
         target.setSection(source.getSection());
         target.setText(source.getText());
         target.setSeverity(source.getSeverity());
