@@ -45,10 +45,10 @@ Create a `.env` file in the root directory:
 # Database Configuration
 POSTGRES_DB=secassess
 POSTGRES_USER=postgres
-POSTGRES_PASSWORD=1234
+POSTGRES_PASSWORD=password
 
 # Security Configuration
-JWT_SECRET=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+JWT_SECRET=secret-key
 JWT_EXPIRATION=86400000
 
 # Redis Configuration
