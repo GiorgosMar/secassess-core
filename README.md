@@ -1,44 +1,56 @@
 # Security Assessment Core API
 
-A specialized RESTful API designed for managing security assessments, featuring a template-based criteria copying system and robust business validation.
+A specialized, production-ready RESTful API designed for managing security assessments. Featuring a template-based criteria copying system, distributed tracing, and robust business validation.
 
-## Assignment Requirements Implementation
-
-This project implements the following core requirements from the assignment:
+## Key Assignment Features
 
 ### 1. RESTful API Architecture
-- Versioned endpoints under `/api/v1/`.
-- Full CRUD support for **Organizations**, **Projects**, **Templates**, and **Assessments**.
-- Pagination, sorting, and filtering support for all list endpoints.
+- **Versioned Endpoints**: All resources are under `/api/v1/`.
+- **Full CRUD**: Support for Organizations, Projects, Templates, and Assessments.
+- **Data Handling**: Advanced pagination, sorting, and filtering for all collection endpoints.
 
 ### 2. Copy Criteria Logic (`POST /api/v1/assessments/{id}/copy-from-template`)
-Implements the core business logic as specified:
-- **Filtering**: Supports `includeSections` to copy only specific parts of a template.
-- **Validation**: Only templates with `PUBLISHED` status can be used as sources.
-- **Mapping**: Automates `TemplateCriterion` → `AssessmentItem` mapping (copying section, text, severity, and weight).
-- **Duplicate Prevention**: If `overwriteExisting` is set to `false`, the system skips items already present (based on `criterionRef`).
-- **Response**: Returns a detailed summary: `{ "copied": X, "skippedDuplicates": Y, "filteredOut": Z, "totalSource": W }`.
+- **Smart Filtering**: Supports `includeSections` to selectively copy parts of a template.
+- **Strict Validation**: Only `PUBLISHED` templates are accepted as sources.
+- **Intelligent Mapping**: Automated `TemplateCriterion` → `AssessmentItem` transformation (text, severity, weight).
+- **Idempotency**: `overwriteExisting` flag prevents or allows overwriting based on `criterionRef`.
+- **Summary Report**: Returns detailed stats: `{ "copied": X, "skippedDuplicates": Y, "filteredOut": Z, "totalSource": W }`.
 
-### 3. Status Transitions (`PATCH /api/v1/assessments/{id}/status`)
-- Enforces strict validation rules: An assessment cannot be set to `COMPLETED` if any `AssessmentItem` has a `null` score.
+### 3. Business Guardrails
+- **Status Integrity**: Prevents setting an assessment to `COMPLETED` if any items remain unscored (`null` score).
+- **JPA Auditing**: Automatic tracking of `createdAt` and `updatedAt` for all entities.
 
-### 4. Security & Access Control
-- **JWT Bearer Authentication**.
-- **Role-Based Access Control (RBAC)**:
-    - `ADMIN`: Organization management and Template publishing.
-    - `ASSESSOR`: Assessment management and Criteria copying.
-    - `VIEWER`: Read-only access.
+## Tech Stack & Infrastructure
 
-## Infrastructure & Deployment
-
-### Tech Stack
 - **Backend**: Java 17, Spring Boot 3.x, Hibernate.
 - **Database**: PostgreSQL 15.
-- **Performance**: Redis Caching.
-- **DevOps**: Docker & Docker Compose.
+- **Schema Management**: Flyway Migrations.
+- **Caching**: Redis for high-performance data retrieval.
+- **Security**: JWT Bearer Authentication & RBAC (ADMIN, ASSESSOR, VIEWER).
+- **Observability**: SLF4J + MDC for Distributed Tracing (Correlation IDs).
 
-### How to Run
-1. Ensure Docker Desktop is running.
-2. Execute the following command in the root directory:
-   ```bash
-   docker compose up --build
+## Observability & Troubleshooting
+
+The system is built with a "debug-first" mindset:
+- **Distributed Tracing**: Every request is assigned a unique `X-Correlation-ID`.
+- **Contextual Logging**: All logs (Controller to Service) automatically include the Trace ID.
+- **Standardized Errors**: Implements **RFC 7807 (Problem Details)**. Error responses include the `traceId`, allowing instant correlation between client reports and server logs.
+
+## Deployment & Configuration
+
+### 1. Environment Configuration
+Create a `.env` file in the root directory:
+
+```env
+# Database Configuration
+POSTGRES_DB=secassess
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=1234
+
+# Security Configuration
+JWT_SECRET=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+JWT_EXPIRATION=86400000
+
+# Redis Configuration
+REDIS_HOST=cache
+REDIS_PORT=6379
