@@ -85,6 +85,7 @@ mvn test
 ```
 
 ## Verification Highlights
-Template Validation: Ensures non-published templates are rejected.
-Scoring Enforcement: Validates that assessments cannot be completed without scores.
-JWT Integrity: Verifies that tokens are correctly signed and parsed.
+
+- Template Validation: Ensures non-published templates are rejected.
+- Scoring Enforcement: Validates that assessments cannot be completed without scores.
+- JWT Integrity: Verifies that tokens are correctly signed and parsed.
