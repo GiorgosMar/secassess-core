@@ -59,8 +59,9 @@ REDIS_PORT=6379
 ## Run with Docker Compose
 To build and start the entire stack (API, DB, Redis):
 
-Bash
+```
 docker compose up --build
+```
 The API will be available at http://localhost:8080.
 
 ## API Documentation
@@ -79,9 +80,10 @@ MDC Support: Unit tests are configured to inject a UNIT-TEST-ID into the MDC, en
 
 ## Execution
 To run all tests and generate the report:
-
-Bash
+```
 mvn test
+```
+
 ## Verification Highlights
 Template Validation: Ensures non-published templates are rejected.
 Scoring Enforcement: Validates that assessments cannot be completed without scores.
