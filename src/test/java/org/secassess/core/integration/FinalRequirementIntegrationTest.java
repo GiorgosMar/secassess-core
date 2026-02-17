@@ -1,4 +1,4 @@
-package org.secassess.core;
+package org.secassess.core.integration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -115,7 +115,7 @@ class FinalRequirementIntegrationTest {
     void testStatusTransitionValidation() {
         String token = jwtService.generateToken("assessor@test.com", "ROLE_ASSESSOR");
 
-        // First copy items (which default to NULL scores)
+        // First copy items
         testCopyCriteriaFunctionality();
 
         UpdateStatusRequestDto statusRequest = new UpdateStatusRequestDto();

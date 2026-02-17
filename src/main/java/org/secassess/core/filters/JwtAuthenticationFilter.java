@@ -43,15 +43,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String role;
 
         try {
-            // 2. Εξαγωγή στοιχείων από το πραγματικό JWT
             userEmail = jwtService.extractUsername(token);
             role = jwtService.extractRole(token);
 
-            // 3. Αν το token είναι έγκυρο και ο χρήστης δεν είναι ήδη authenticated
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 if (jwtService.isTokenValid(token, userEmail)) {
 
-                    // Δημιουργία του Authentication object με το ρόλο που διαβάσαμε από το token
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userEmail,
                             null,
@@ -60,12 +57,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                    // Ενημέρωση του Security Context
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
         } catch (Exception e) {
-            // Σε περίπτωση ληγμένου ή κακόβουλου token, το context μένει κενό (403 Forbidden)
             logger.error("Could not set user authentication in security context", e);
         }
 

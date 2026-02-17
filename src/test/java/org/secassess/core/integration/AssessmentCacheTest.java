@@ -1,4 +1,4 @@
-package org.secassess.core;
+package org.secassess.core.integration;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,14 +33,13 @@ public class AssessmentCacheTest {
 
     @Test
     @DisplayName("Verify that second call to findAll is served from Cache")
-    @WithMockUser(roles = "VIEWER") // Βεβαιώσου ότι ο ρόλος VIEWER υπάρχει στο σύστημά σου
+    @WithMockUser(roles = "VIEWER")
     public void testFindAllIsCached() throws Exception {
 
         log.info("==========================================================");
         log.info("STEP 1: Executing first call (Expected: CACHE MISS)");
         log.info("==========================================================");
 
-        // Πρώτη κλήση - Θα πρέπει να εκτελεστεί κανονικά
         mockMvc.perform(get("/api/v1/assessments")
                         .param("page", "0")
                         .param("size", "10"))
@@ -50,7 +49,6 @@ public class AssessmentCacheTest {
         log.info("STEP 2: Executing second call (Expected: CACHE HIT)");
         log.info("==========================================================");
 
-        // Δεύτερη κλήση - Θα πρέπει να έρθει από την Cache
         mockMvc.perform(get("/api/v1/assessments")
                         .param("page", "0")
                         .param("size", "10"))
@@ -60,7 +58,6 @@ public class AssessmentCacheTest {
         log.info("STEP 3: Verifying that Service was invoked only ONCE");
         log.info("==========================================================");
 
-        // Επαλήθευση ότι η μέθοδος του service κλήθηκε ΜΟΝΟ 1 φορά
         verify(assessmentService, times(1)).findAll(any(Pageable.class));
 
         log.info("SUCCESS: Cache logic is working perfectly!");

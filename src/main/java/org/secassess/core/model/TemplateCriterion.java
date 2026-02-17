@@ -25,16 +25,16 @@ public class TemplateCriterion {
     @JoinColumn(name = "template_id")
     private AssessmentTemplate template;
 
-    @Column(columnDefinition = "section")
+    @Column(name = "section")
     private String section;
 
     @Column(columnDefinition = "TEXT")
     private String text;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "severity")
+    @Column(name = "severity")
     private Severity severity;
 
-    @Column(columnDefinition = "weight")
+    @Column(name = "weight", precision = 10, scale = 2)
     private BigDecimal weight;
 }

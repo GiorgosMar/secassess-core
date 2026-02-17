@@ -9,13 +9,13 @@ CREATE TABLE organization (
 
 -- 2. Project
 CREATE TABLE project (
-    id BIGSERIAL PRIMARY KEY, -- BigInt Auto Increment [cite: 150]
+    id BIGSERIAL PRIMARY KEY, -- BigInt Auto Increment
     organization_id UUID NOT NULL REFERENCES organization(id),
     name VARCHAR(128) NOT NULL,
     code VARCHAR(12) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    CONSTRAINT uk_project_org_code UNIQUE (organization_id, code) -- Unique per org [cite: 153]
+    CONSTRAINT uk_project_org_code UNIQUE (organization_id, code)
 );
 
 -- 3. Assessment Template

@@ -12,7 +12,7 @@ public class SemVerValidator implements ConstraintValidator<SemVer, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null) return true; // Το @NotNull ελέγχει τα nulls
+        if (value == null) return true;
         return value.matches(SEMVER_REGEX);
     }
 }

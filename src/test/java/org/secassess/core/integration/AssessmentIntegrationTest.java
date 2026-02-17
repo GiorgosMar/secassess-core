@@ -1,4 +1,4 @@
-package org.secassess.core;
+package org.secassess.core.integration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

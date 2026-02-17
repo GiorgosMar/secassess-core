@@ -38,7 +38,7 @@ public class AssessmentItem {
     @Enumerated(EnumType.STRING)
     private Severity severity;
 
-    @Column(name = "weight")
+    @Column(name = "weight", precision = 10, scale = 2)
     private BigDecimal weight;
 
     @Column(name = "score")
